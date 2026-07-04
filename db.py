@@ -51,6 +51,10 @@ def init_db():
         )
         cursor = conn.cursor()
 
+        # Dynamically create and select the database configured in Config
+        cursor.execute(f"CREATE DATABASE IF NOT EXISTS {Config.DB_NAME}")
+        cursor.execute(f"USE {Config.DB_NAME}")
+
         schema_path = os.path.join(os.path.dirname(__file__), 'database', 'schema.sql')
         with open(schema_path, 'r') as f:
             sql_script = f.read()

@@ -5,25 +5,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const roleEmployee = document.getElementById('roleEmployee');
     const roleManager = document.getElementById('roleManager');
     const formSubtitle = document.getElementById('formSubtitle');
-    const idInputLabel = document.getElementById('idInputLabel');
-    const employeeIdInput = document.getElementById('employeeId');
     const roleValueInput = document.getElementById('roleValue');
 
-    if (roleEmployee && roleManager && formSubtitle && idInputLabel && employeeIdInput && roleValueInput) {
+    if (roleEmployee && roleManager && formSubtitle && roleValueInput) {
         const setRole = (role) => {
             roleValueInput.value = role;
             if (role === 'employee') {
                 roleEmployee.classList.add('active');
                 roleManager.classList.remove('active');
                 formSubtitle.textContent = 'Join the serenity. Get started with your employee profile.';
-                idInputLabel.textContent = 'Employee ID';
-                employeeIdInput.placeholder = 'e.g. SRN-2024-001';
             } else {
                 roleManager.classList.add('active');
                 roleEmployee.classList.remove('active');
                 formSubtitle.textContent = 'Step into a more organized management experience. Set up your HR portal today.';
-                idInputLabel.textContent = 'Manager ID / Employee ID';
-                employeeIdInput.placeholder = 'e.g. SRN-2024-001';
             }
         };
 

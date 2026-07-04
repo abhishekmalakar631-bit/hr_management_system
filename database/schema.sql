@@ -1,8 +1,4 @@
--- HRMS Serene — Full Database Schema
--- Supports: users, employees, departments, attendance, leave, salary, payroll, documents, notifications, announcements
-
-CREATE DATABASE IF NOT EXISTS hrms_serene;
-USE hrms_serene;
+-- Database creation is handled dynamically by db.py using Config.DB_NAME
 
 -- ============================================
 -- 1. Users (authentication & role)

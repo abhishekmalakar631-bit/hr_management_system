@@ -51,6 +51,34 @@ def signin_post():
     return redirect(url_for('dashboard.dashboard'))
 
 
+def generate_employee_id():
+    import datetime
+    current_year = datetime.date.today().year
+    prefix = f"SRN-{current_year}-"
+    
+    # Get all employee_ids starting with the prefix
+    users = execute_query(
+        "SELECT employee_id FROM users WHERE employee_id LIKE %s ORDER BY employee_id DESC",
+        (prefix + '%',), fetch_all=True
+    )
+    
+    max_num = 0
+    if users:
+        for u in users:
+            emp_code = u['employee_id']
+            parts = emp_code.split('-')
+            if len(parts) == 3:
+                try:
+                    num = int(parts[2])
+                    if num > max_num:
+                        max_num = num
+                except ValueError:
+                    continue
+    
+    next_num = max_num + 1
+    return f"{prefix}{next_num:03d}"
+
+
 @auth_bp.route('/signup', methods=['GET'])
 @auth_bp.route('/sign_up.html', methods=['GET'])
 def signup():
@@ -61,7 +89,6 @@ def signup():
 
 @auth_bp.route('/signup', methods=['POST'])
 def signup_post():
-    employee_id = request.form.get('employee_id', '').strip()
     email = request.form.get('email', '').strip()
     role = request.form.get('role', 'employee').strip()
     password = request.form.get('password', '').strip()
@@ -74,8 +101,6 @@ def signup_post():
 
     # Server-side validation
     errors = []
-    if not employee_id:
-        errors.append('Employee ID is required.')
     if not email or '@' not in email:
         errors.append('A valid email is required.')
     if role not in ('employee', 'hr_manager'):
@@ -96,12 +121,15 @@ def signup_post():
 
     # Check for duplicates
     existing = execute_query(
-        "SELECT id FROM users WHERE employee_id = %s OR email = %s",
-        (employee_id, email), fetch_one=True
+        "SELECT id FROM users WHERE email = %s",
+        (email,), fetch_one=True
     )
     if existing:
-        flash('An account with this Employee ID or email already exists.', 'error')
+        flash('An account with this email already exists.', 'error')
         return render_template('sign_up.html')
+
+    # Generate employee_id dynamically
+    employee_id = generate_employee_id()
 
     # Hash password and insert user
     hashed_password = generate_password_hash(password)

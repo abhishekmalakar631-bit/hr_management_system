@@ -115,14 +115,27 @@ def approve_leave(leave_id):
     )
 
     # Mark attendance as 'Leave' for the leave period
-    execute_query(
-        """INSERT IGNORE INTO attendance (employee_id, attendance_date, status)
-           SELECT %s, DATE_ADD(%s, INTERVAL seq DAY), 'Leave'
-           FROM (SELECT @row := @row + 1 as seq FROM information_schema.columns, (SELECT @row := -1) r LIMIT 366) seqs
-           WHERE DATE_ADD(%s, INTERVAL seq DAY) <= %s""",
-        (leave_req['employee_id'], leave_req['start_date'], leave_req['start_date'], leave_req['end_date']),
-        commit=True
-    )
+    import datetime
+    start = leave_req['start_date']
+    end = leave_req['end_date']
+    curr = start
+    if isinstance(curr, str):
+        try:
+            curr = datetime.datetime.strptime(curr, "%Y-%m-%d").date()
+        except ValueError:
+            curr = datetime.date.fromisoformat(curr)
+    if isinstance(end, str):
+        try:
+            end = datetime.datetime.strptime(end, "%Y-%m-%d").date()
+        except ValueError:
+            end = datetime.date.fromisoformat(end)
+            
+    while curr <= end:
+        execute_query(
+            "INSERT IGNORE INTO attendance (employee_id, attendance_date, status) VALUES (%s, %s, 'Leave')",
+            (leave_req['employee_id'], curr), commit=True
+        )
+        curr += datetime.timedelta(days=1)
 
     # Notify the employee
     execute_query(

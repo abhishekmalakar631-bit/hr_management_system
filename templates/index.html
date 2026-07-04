@@ -10,7 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
@@ -19,7 +19,7 @@
     <header class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <span class="logo-text"><a href="index.html">HRMS Serene</a></span>
+                <span class="logo-text"><a href="{{ url_for('home') }}">HRMS Serene</a></span>
             </div>
             <nav class="nav-menu" id="navMenu">
                 <a href="#product" class="nav-link active">Product</a>
@@ -28,8 +28,8 @@
                 <a href="#contact" class="nav-link">Contact</a>
             </nav>
             <div class="nav-actions">
-                <a href="signin.html" class="btn-login">Login</a>
-                <a href="sign_up.html" class="btn-signup">Sign Up</a>
+                <a href="{{ url_for('auth.signin') }}" class="btn-login">Login</a>
+                <a href="{{ url_for('auth.signup') }}" class="btn-signup">Sign Up</a>
             </div>
             <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation Menu">
                 <span></span>
@@ -55,7 +55,7 @@
                         growth and employee wellbeing.
                     </p>
                     <div class="hero-buttons">
-                        <a href="sign_up.html" class="btn-primary">Get Started</a>
+                        <a href="{{ url_for('auth.signup') }}" class="btn-primary">Get Started</a>
                         <a href="#demo" class="btn-secondary">Book a Demo</a>
                     </div>
                     <div class="hero-trust">
@@ -373,7 +373,7 @@
                 <p class="cta-subtitle">Join hundreds of forward-thinking companies that have transitioned to a more
                     organic way of working.</p>
                 <div class="cta-buttons">
-                    <a href="signup.html" class="btn-cta-primary">Start Free Trial</a>
+                    <a href="{{ url_for('auth.signup') }}" class="btn-cta-primary">Start Free Trial</a>
                     <a href="#demo" class="btn-cta-secondary">Speak to an Expert</a>
                 </div>
             </div>
@@ -418,7 +418,7 @@
         </div>
     </footer>
 
-    <script src="../static/js/index.js"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 
 </html>

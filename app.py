@@ -39,6 +39,9 @@ def home():
 
 
 # ======================== Context Processor ========================
+app.jinja_env.globals.update(hasattr=hasattr)
+
+
 @app.context_processor
 def inject_session():
     """Make session data available to all templates."""
